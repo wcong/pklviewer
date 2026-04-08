@@ -1,0 +1,87 @@
+{
+  "name": "pklviewer",
+  "displayName": "PklViewer",
+  "description": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wcong/pklviewer"
+  },
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:pklviewer.openPkl",
+    "onCustomEditor:pklviewer.viewer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pklviewer.openPkl",
+        "title": "PKL Viewer: Open PKL File"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "pklviewer.viewer",
+        "displayName": "PKL Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.pkl"
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "PKL Viewer",
+      "properties": {
+        "pklviewer.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Python executable used to decode PKL files."
+        },
+        "pklviewer.condaPythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the conda environment python executable. When set, this overrides pklviewer.pythonPath."
+        },
+        "pklviewer.maxOutputBytes": {
+          "type": "number",
+          "default": 5242880,
+          "minimum": 102400,
+          "description": "Maximum bytes of decoded JSON allowed from Python."
+        },
+        "pklviewer.maxDepth": {
+          "type": "number",
+          "default": 8,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Maximum depth when expanding objects in the PKL viewer."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.110.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.56.1",
+    "eslint": "^9.39.3",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
