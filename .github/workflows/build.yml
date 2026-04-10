@@ -1,0 +1,52 @@
+name: Build and Package VSIX
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install vsce
+      run: npm install -g @vscode/vsce
+
+    - name: Compile TypeScript
+      run: npm run compile
+
+    - name: Package VSIX
+      run: vsce package --out pklviewer.vsix
+
+    - name: Upload VSIX as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pklviewer-vsix
+        path: pklviewer.vsix
+
+    - name: Upload VSIX to Release (on release)
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./pklviewer.vsix
+        asset_name: pklviewer-${{ github.event.release.tag_name }}.vsix
+        asset_content_type: application/zip

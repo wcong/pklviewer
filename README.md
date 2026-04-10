@@ -29,6 +29,15 @@ Security note: unpickling is code execution. Only open trusted PKL files.
 3. Package a VSIX: `npx @vscode/vsce package`
 4. Install the VSIX: `code --install-extension pklviewer-0.0.1.vsix`
 
+## Automated Builds and Downloads
+
+This repository uses GitHub Actions to automatically build and package the VSIX file.
+
+- **Latest Build**: Download the latest VSIX from the [GitHub Actions artifacts](https://github.com/wcong/pklviewer/actions) (available for 90 days).
+- **Releases**: For stable versions, create a GitHub Release to upload the VSIX. Download from the [Releases page](https://github.com/wcong/pklviewer/releases).
+
+To install from a downloaded VSIX: `code --install-extension path/to/pklviewer.vsix`
+
 ## Development
 
 Press `F5` in VS Code to launch the extension host and open a workspace with .pkl files. Use the command `PKL Viewer: Open PKL File` or open a .pkl file directly to use the custom editor.
