@@ -23,9 +23,25 @@
     "commands": [
       {
         "command": "pklviewer.openPkl",
-        "title": "PKL Viewer: Open PKL File"
+        "title": "PKL Viewer: Open File"
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "pklviewer.openPkl",
+          "when": "resourceScheme == file",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pklviewer.openPkl",
+          "when": "resourceScheme == file",
+          "group": "navigation"
+        }
+      ]
+    },
     "customEditors": [
       {
         "viewType": "pklviewer.viewer",

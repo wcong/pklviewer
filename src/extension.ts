@@ -17,20 +17,26 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('pklviewer.openPkl', async () => {
-			const selected = await vscode.window.showOpenDialog({
-				canSelectMany: false,
-				filters: { 'Pickle Files': ['pkl'] },
-				openLabel: 'Open PKL',
-			});
+		vscode.commands.registerCommand('pklviewer.openPkl', async (uri?: vscode.Uri | vscode.Uri[]) => {
+			const candidate = Array.isArray(uri) ? uri[0] : uri;
+			let target = candidate instanceof vscode.Uri ? candidate : undefined;
 
-			if (!selected || selected.length === 0) {
-				return;
+			if (!target) {
+				const selected = await vscode.window.showOpenDialog({
+					canSelectMany: false,
+					openLabel: 'Open with PKL Viewer',
+				});
+
+				if (!selected || selected.length === 0) {
+					return;
+				}
+
+				target = selected[0];
 			}
 
 			await vscode.commands.executeCommand(
 				'vscode.openWith',
-				selected[0],
+				target,
 				PklViewerProvider.viewType
 			);
 		})
