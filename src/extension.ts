@@ -123,6 +123,7 @@ function loadPklFile(
 
 	const pythonScript = [
 		"import json",
+		"import math",
 		"import os",
 		"import pickle",
 		"import sys",
@@ -144,14 +145,14 @@ function loadPklFile(
 		"            \"__type__\": \"DataFrame\",",
 		"            \"shape\": list(obj.shape),",
 		"            \"columns\": list(obj.columns)[:max_items],",
-		"            \"head\": obj.head(max_table_rows).to_dict(orient=\"list\"),",
+		"            \"head\": to_json(obj.head(max_table_rows).to_dict(orient=\"list\")),",
 		"        }",
 		"    if isinstance(obj, pd.Series):",
 		"        return {",
 		"            \"__type__\": \"Series\",",
 		"            \"shape\": list(obj.shape),",
 		"            \"name\": str(obj.name),",
-		"            \"head\": obj.head(max_table_rows).to_list(),",
+		"            \"head\": to_json(obj.head(max_table_rows).to_list()),",
 		"        }",
 		"    return {\"__type__\": type(obj).__name__, \"repr\": repr(obj)}",
 		"",
@@ -183,7 +184,13 @@ function loadPklFile(
 		"        return {\"__type__\": \"ref\", \"repr\": repr(obj)}",
 		"    if depth > max_depth:",
 		"        return {\"__type__\": \"max_depth\", \"repr\": repr(obj)}",
-		"    if obj is None or isinstance(obj, (bool, int, float, str)):",
+		"    if obj is None or isinstance(obj, (bool, int, str)):",
+		"        return obj",
+		"    if isinstance(obj, float):",
+		"        if math.isnan(obj):",
+		"            return \"NaN\"",
+		"        if math.isinf(obj):",
+		"            return \"Infinity\" if obj > 0 else \"-Infinity\"",
 		"        return obj",
 		"    if isinstance(obj, bytes):",
 		"        preview = obj[:64].hex()",
@@ -240,7 +247,7 @@ function loadPklFile(
 		"    raw = raw[:max_raw] + \" ...<truncated>\"",
 		"",
 		"payload = {\"data\": to_json(data), \"raw\": raw}",
-		"print(json.dumps(payload))",
+		"print(json.dumps(payload, allow_nan=False))",
 	].join("\n");
 
 	return new Promise((resolve) => {
