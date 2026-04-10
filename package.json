@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wcong/pklviewer"
+    "url": "https://github.com/wcong/PyDataViewer"
   },
   "version": "0.0.1",
   "engines": {

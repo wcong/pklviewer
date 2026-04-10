@@ -32,13 +32,13 @@ jobs:
       run: npm run compile
 
     - name: Package VSIX
-      run: vsce package --out pklviewer.vsix
+      run: vsce package --out pydata-viewer.vsix
 
     - name: Upload VSIX as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: pklviewer-vsix
-        path: pklviewer.vsix
+        name: pydata-viewer-vsix
+        path: pydata-viewer.vsix
 
     - name: Upload VSIX to Release (on release)
       if: github.event_name == 'release'
@@ -47,6 +47,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./pklviewer.vsix
-        asset_name: pklviewer-${{ github.event.release.tag_name }}.vsix
+        asset_path: ./pydata-viewer.vsix
+        asset_name: pydata-viewer-${{ github.event.release.tag_name }}.vsix
         asset_content_type: application/zip
